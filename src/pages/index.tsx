@@ -28,8 +28,8 @@ const AddJokeLink = styled(Link)`
 export default function Home() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [loading, setLoading] = useState(true);
-  const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(25);
+  const [currentPage, setCurrentPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
   const [jokes, setJokes] = useState([]);
   const { isDark, toggleDark } = useUIContext();
   const [open, setOpen] = useState(isLoggedIn);
@@ -51,10 +51,11 @@ export default function Home() {
 
   useEffect(() => {
     const getJokes = async () => {
+      console.log('getJokes')
       try {
         setLoading(true);
         const jokesResp = await axios.get(
-          `/api/joke?page=${page}&limit=${rowsPerPage}`
+          `/api/joke?page=${currentPage}&limit=${rowsPerPage}`
         );
         // console.log(JSON.stringify(jokesResp.data))
         setJokes(jokesResp.data);
@@ -65,15 +66,18 @@ export default function Home() {
     };
 
     getJokes();
-  }, [page, rowsPerPage]);
+  }, [currentPage, rowsPerPage]);
 
   const onChange = useCallback((newPage: number, newRowsPerPage: number) => {
-    //
+    // TODO do the request
     console.log('newPage', newPage);
     console.log('newRowsPerPage', newRowsPerPage);
-    setPage(newPage);
+    setCurrentPage(newPage);
     setRowsPerPage(newRowsPerPage);
   }, []);
+
+  console.log('currentPage', currentPage);
+    console.log('rowsPerPage', rowsPerPage);
 
   const handleLogin = useCallback(async () => {
     try {
@@ -190,8 +194,8 @@ export default function Home() {
               loading={loading}
               columns={columns}
               onChange={onChange}
-              npage={page}
-              nrowsPerPage={rowsPerPage}
+              cpage={currentPage}
+              cRowsPerPage={rowsPerPage}
             />
           </>
         )}

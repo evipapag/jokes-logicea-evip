@@ -517,19 +517,9 @@
     semver "^7.3.7"
     tsutils "^3.21.0"
 
-"@typescript-eslint/parser@^5.42.0", "@typescript-eslint/parser@^5.50.0":
+"@typescript-eslint/parser@^5.42.0", "@typescript-eslint/parser@^5.50.0", "@typescript-eslint/parser@^5.60.0":
   version "5.60.0"
   resolved "https://registry.npmjs.org/@typescript-eslint/parser/-/parser-5.60.0.tgz"
-  integrity sha512-jBONcBsDJ9UoTWrARkRRCgDz6wUggmH5RpQVlt7BimSwaTkTjwypGzKORXbR4/2Hqjk9hgwlon2rVQAjWNpkyQ==
-  dependencies:
-    "@typescript-eslint/scope-manager" "5.60.0"
-    "@typescript-eslint/types" "5.60.0"
-    "@typescript-eslint/typescript-estree" "5.60.0"
-    debug "^4.3.4"
-
-"@typescript-eslint/parser@^5.60.0":
-  version "5.60.0"
-  resolved "https://registry.npmjs.org/@typescript-eslint/parser/-/parser-5.60.0.tgz#08f4daf5fc6548784513524f4f2f359cebb4068a"
   integrity sha512-jBONcBsDJ9UoTWrARkRRCgDz6wUggmH5RpQVlt7BimSwaTkTjwypGzKORXbR4/2Hqjk9hgwlon2rVQAjWNpkyQ==
   dependencies:
     "@typescript-eslint/scope-manager" "5.60.0"

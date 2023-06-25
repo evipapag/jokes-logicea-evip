@@ -111,6 +111,7 @@ const Form = ({ data }: { data: Joke }) => {
             <Grid item xs={12}>
               <TextField
                 label="Created At"
+                type="date"
                 value={createdAt}
                 onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                   setCreatedAt(event.target.value);

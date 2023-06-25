@@ -19,8 +19,8 @@ interface DataTableProps<T = any> {
   rows: Joke[];
   loading: boolean;
   columns: Column[];
-  npage?: number;
-  nrowsPerPage?: number;
+  cpage?: number;
+  cRowsPerPage?: number;
   onChange: (page: number, rowsPerPage: number) => void;
 }
 
@@ -28,19 +28,13 @@ export default function DataTable({
   rows,
   loading,
   columns,
-  npage,
-  nrowsPerPage,
+  cpage,
+  cRowsPerPage,
   onChange,
 }: DataTableProps) {
   const { isDark } = useUIContext();
-  const [page, setPage] = React.useState(npage || 0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(nrowsPerPage || 25);
-
-  console.log('rows', rows);
-
-  // Avoid a layout jump when reaching the last page with empty rows.
-  const emptyRows =
-    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
+  const [page, setPage] = React.useState(cpage || 0);
+  const [rowsPerPage, setRowsPerPage] = React.useState(cRowsPerPage || 5);
 
   const handleChangePage = (
     event: React.MouseEvent<HTMLButtonElement> | null,
@@ -58,11 +52,7 @@ export default function DataTable({
     onChange(0, parseInt(event.target.value, 10));
   };
 
-  const finalData =
-    rowsPerPage > 0
-      ? rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-      : rows;
-
+  const finalData = rows;
   console.log('finalData', finalData);
 
   return (
@@ -85,18 +75,13 @@ export default function DataTable({
               </TableRow>
             ))
           )}
-          {!loading && emptyRows > 0 && (
-            <TableRow style={{ height: 53 * emptyRows }}>
-              <TableCell colSpan={6} />
-            </TableRow>
-          )}
         </TableBody>
         <TableFooter>
           <TableRow>
             <StyledTablePagination
               isDark={isDark}
+              count={-1}
               rowsPerPageOptions={[5, 10]}
-              count={rows.length}
               rowsPerPage={rowsPerPage}
               page={page}
               SelectProps={{

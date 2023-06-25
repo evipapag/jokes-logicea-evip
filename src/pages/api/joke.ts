@@ -10,19 +10,25 @@ type Filters = {
   id?: string;
 };
 
-const getJokes = (filters: Filters, id: any) => {
+const getJoke = (id: string | number) => {
+  const url = `${jokeBaseUrl}/${id}`;
+  console.log('url', url);
+  return axios.get(url);
+};
+
+const getJokes = (filters: Filters) => {
   const params = {
     ...filters,
   };
 
   const qs = queryString.stringify(params);
-
-  const path = id ? `/${id}` : '';
-  const url = `${jokeBaseUrl}${path}?${qs}`;
-  console.log('url', url);
+  const url = `${jokeBaseUrl}?${qs}`;
   return axios.get(url);
 };
 
+
+// for reason of unpredicted response items
+// that do not apply to the model
 const transformItem = (item: any) => ({
   ...item,
   Title: item.Title || item.title,
@@ -32,35 +38,43 @@ const transformItem = (item: any) => ({
 });
 
 const transformData = (data: any) => {
-  if (Array.isArray(data)) {
-    console.log('data', data);
-    return data.map((item: any) => transformItem(item));
-  }
-  return transformItem(data);
+  return data.map((item: any) => transformItem(item));
 };
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   // return axios.delete(`${jokeBaseUrl}/1686521618148`);
 
   if (req.method === 'GET') {
-    const params = {
-      _params: req.query.page || '0',
-      _limit: req.query.limit || '5',
-    };
+    if (req.query.id) {
+      try {
+        //@ts-ignore
+        const response = await getJoke(req.query.id);
+        const transformedData = transformItem(response.data);
+        res.status(200).json(transformedData);
+      } catch (error: any) {
+        console.log('error', error.message);
+        return res.status(400).send({ message: error.message });
+      }
 
-    // console.log("req.query", req.query);
-    // console.log("req.params", req.params);
-    // console.log("req.body", req.body);
+    } else {
+      const params = {
+        _params: req.query.page,
+        _limit: req.query.limit,
+      };
 
-    try {
-      //@ts-ignore
-      const response = await getJokes(params, req.query.id);
-      console.log(response.data);
-      const transformedData = transformData(response.data);
-      res.status(200).json(transformedData);
-    } catch (error: any) {
-      console.log('error', error.message);
-      return res.status(400).send({ message: error.message });
+      // console.log("req.query", req.query);
+      // console.log("req.params", req.params);
+      // console.log("req.body", req.body);
+
+      try {
+        //@ts-ignore
+        const response = await getJokes(params);
+        const transformedData = transformData(response.data);
+        res.status(200).json(transformedData);
+      } catch (error: any) {
+        console.log('error', error.message);
+        return res.status(400).send({ message: error.message });
+      }
     }
   }
 
